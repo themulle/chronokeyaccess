@@ -6,17 +6,24 @@ Hierzu werden die PinCodes anhand des aktuellen Zeitstempels errechnet.
 Per Konfigurationsdatei werden Zutrittszeiten definiert (z.B. jeden Monatg zwischen 16:00 und 22:00).
 Das Programm berechnet hierzu anhand eines Geheimschlüssel den Code der zum entsprechenden Zeitpunkt gültig ist.
 
+## Hintergrund
+Den Mietern der Kalthalle des SV Ringingen soll der Zutritt nur zu den von ihnen gebuchten Zeiten gewährt werden.
+Mangels Internetanschluss kann ein PIN derzeit nicht online auf das Schließsystem übermittelt werden.
+Diese Applikation ermöglicht es den Mietern die Zutrittcodes für ihre gebuchten Zeiten direkt nach der Buchung z.b. per Whatsapp ode Mail mitzuteilen.
+
 **Vorteile:**
 - Das Schließsystem muss nicht online sein
 - Zugriff für Dritte nur zu den ihnen erlaubten Zeiten
 - einheitliche oder separate Pin-Codes für die Tage der Zeitserien möglich
+- Ermittlung des Pins für einen bestimmten Zeitpunkt per Web-Applikation, API oder Kommandozeile möglich 
 - flexible definiton der Zeitserien über Cron-Syntax
   - Syntax: <https://github.com/gorhill/cronexpr>
   - Online Editor: <https://www.freeformatter.com/cron-expression-generator-quartz.html>
 
 **Nachteile:**
-- Benutzer benötigt evtl. für jeden Zutritt einen separaten Pin-Code
-- Änderungen an der Konfiguration müssen auf das Schließsystem übertragen werden
+- Ein an einen Benutzer übermittelten PIN kann nicht mehr entzogen/gesperrt werden
+- Ein Benutzer benötigt evtl. für jede Buchung einen separaten Pin-Code
+- Änderungen an der Konfiguration müssen händisch auf das Schließsystem übertragen werden
 
 
 ## Beispielkonfigurationen
