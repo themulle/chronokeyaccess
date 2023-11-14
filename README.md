@@ -6,11 +6,6 @@ Hierzu werden die PinCodes anhand des aktuellen Zeitstempels errechnet.
 Per Konfigurationsdatei werden Zutrittszeiten definiert (z.B. jeden Monatg zwischen 16:00 und 22:00).
 Das Programm berechnet hierzu anhand eines Geheimschlüssel den Code der zum entsprechenden Zeitpunkt gültig ist.
 
-## Hintergrund
-Den Mietern der Kalthalle des SV Ringingen soll der Zutritt nur zu den von ihnen gebuchten Zeiten gewährt werden.
-Mangels Internetanschluss kann ein PIN derzeit nicht online auf das Schließsystem übermittelt werden.
-Diese Applikation ermöglicht es den Mietern die Zutrittcodes für ihre gebuchten Zeiten direkt nach der Buchung z.b. per Whatsapp ode Mail mitzuteilen.
-
 **Vorteile:**
 - Das Schließsystem muss nicht online sein
 - Zugriff für Dritte nur zu den ihnen erlaubten Zeiten
@@ -24,6 +19,12 @@ Diese Applikation ermöglicht es den Mietern die Zutrittcodes für ihre gebuchte
 - Ein an einen Benutzer übermittelten PIN kann nicht mehr entzogen/gesperrt werden
 - Ein Benutzer benötigt evtl. für jede Buchung einen separaten Pin-Code
 - Änderungen an der Konfiguration müssen händisch auf das Schließsystem übertragen werden
+
+
+## Hintergrund
+Den Mietern der Kalthalle des SV Ringingen soll der Zutritt nur zu den von ihnen gebuchten Zeiten gewährt werden.
+Mangels Internetanschluss kann ein PIN derzeit nicht online auf das Schließsystem übermittelt werden.
+Diese Applikation ermöglicht es den Mietern die Zutrittcodes für ihre gebuchten Zeiten direkt nach der Buchung z.b. per Whatsapp ode Mail mitzuteilen.
 
 
 ## Beispielkonfigurationen
