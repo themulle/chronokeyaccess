@@ -10,6 +10,7 @@ import (
 
 type EntranceCode struct {
 	Description string
+	OneTimePin  bool
 	Start       time.Time
 	Stop        time.Time
 	PinCode     uint

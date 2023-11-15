@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/themulle/chronokeyaccess/internal/defaultconfig"
+	"github.com/themulle/chronokeyaccess/internal/store"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
 )
 
@@ -19,36 +19,22 @@ var (
 func init() {
 	flag.StringVar(&configFileName, "c", "config.json", "config file name")
 	flag.UintVar(&pinCode, "t", 0, "test pin code")
-	flag.UintVar(&showCurrentCodes, "s", 300, "show codes for the next n days")
+	flag.UintVar(&showCurrentCodes, "s", 1, "show codes for the next n days")
 	flag.Parse()
 }
 
 func main() {
-	var cm codemanager.CodeManager
-	{
-		data, err := os.ReadFile(configFileName)
-		if os.IsNotExist(err) {
-			fmt.Printf("config file %s does not exist, creating default config\n", configFileName)
-			data, err = codemanager.MarshalCodeManagerStore(defaultconfig.GetDefualtConfig())
-			if err != nil {
-				fmt.Printf("Error: %s", err)
-				os.Exit(1)
-			}
-			err = os.WriteFile(configFileName, data, 0700)
-			if err != nil {
-				fmt.Printf("Error: %s", err)
-				os.Exit(1)
-			}
-		} else if err != nil {
-			fmt.Printf("Error: %s", err)
-			os.Exit(1)
-		}
-		cm, err = codemanager.Load(data)
+	cm, err := func() (codemanager.CodeManager, error) {
+		codeManagerStore, err := store.LoadConfiguration(configFileName, true)
 		if err != nil {
-			fmt.Printf("Error: %s", err)
-			os.Exit(1)
+			return nil, err
 		}
+		return codemanager.InitFromStore(codeManagerStore)
+	}()
 
+	if err != nil {
+		fmt.Printf("configuration error: %s", err)
+		os.Exit(1)
 	}
 
 	if pinCode > 0 {

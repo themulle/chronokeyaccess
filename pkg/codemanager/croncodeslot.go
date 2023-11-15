@@ -12,7 +12,7 @@ type CronCodeSlot struct {
 	Description    string
 	CronString     string
 	Duration       time.Duration
-	UseSameCode    bool
+	OneTimePin     bool
 	cronExpression *cronexpr.Expression
 }
 

@@ -12,19 +12,19 @@ import (
 func TestCalculateCronPinCode_Static(t *testing.T) {
 	ecm := codemanager.NewCronCodeManager("1234", codemanager.CronCodeSlots{
 		{
-			CronString:  "0 0 16 ? 1 mon,tue,wed,thu,fri 2023",
-			Duration:    time.Hour * 3,
-			UseSameCode: true,
+			CronString: "0 0 16 ? 1 mon,tue,wed,thu,fri 2023",
+			Duration:   time.Hour * 3,
+			OneTimePin: false,
 		},
 		{
-			CronString:  "0 0 20 ? 1 1 2023",
-			Duration:    time.Hour * 3,
-			UseSameCode: true,
+			CronString: "0 0 20 ? 1 1 2023",
+			Duration:   time.Hour * 3,
+			OneTimePin: false,
 		},
 		{
-			CronString:  "0 0 8 ? * 6 2023",
-			Duration:    time.Hour * 4,
-			UseSameCode: false,
+			CronString: "0 0 8 ? * 6 2023",
+			Duration:   time.Hour * 4,
+			OneTimePin: true,
 		},
 	})
 
@@ -90,9 +90,9 @@ func TestCalculateCronPinCode_Static(t *testing.T) {
 func TestCalculateDynamicCronPinCode_Dynamic(t *testing.T) {
 	ecm := codemanager.NewCronCodeManager("1234", codemanager.CronCodeSlots{
 		{
-			CronString:  "0 0 8 ? * 6 2023",
-			Duration:    time.Hour * 4,
-			UseSameCode: false,
+			CronString: "0 0 8 ? * 6 2023",
+			Duration:   time.Hour * 4,
+			OneTimePin: true,
 		},
 	})
 
@@ -127,9 +127,9 @@ func TestCalculateDynamicCronPinCode_Dynamic(t *testing.T) {
 func TestCalculateDynamicCronPinCode_Overflow(t *testing.T) {
 	ecm := codemanager.NewCronCodeManager("1234", codemanager.CronCodeSlots{
 		{
-			CronString:  "0 0 22 1 2 * 2023",
-			Duration:    time.Hour * 4,
-			UseSameCode: false,
+			CronString: "0 0 22 1 2 * 2023",
+			Duration:   time.Hour * 4,
+			OneTimePin: true,
 		},
 	})
 

@@ -3,8 +3,6 @@ package codemanager
 import (
 	"fmt"
 	"time"
-
-	"github.com/gorhill/cronexpr"
 )
 
 type cronCodeManager struct {
@@ -12,17 +10,21 @@ type cronCodeManager struct {
 	Slots CronCodeSlots
 }
 
-func NewCronCodeManager(password string, slots CronCodeSlots) CodeManager {
+func NewCronCodeManager(password string, slots CronCodeSlots) *cronCodeManager {
 	retval := &cronCodeManager{
 		codeManagerBase: codeManagerBase{Password: password},
 		Slots:           slots,
 	}
 
-	if err := slots.Init(); err != nil {
+	if err := retval.Init(); err != nil {
 		fmt.Println(err.Error())
 	}
 
 	return retval
+}
+
+func (ecm *cronCodeManager) Init() error {
+	return ecm.Slots.Init()
 }
 
 func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
@@ -35,15 +37,12 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 
 		pinCode := ecm.CalculatePinCode(slot.CronString)
 
-		exp, err := cronexpr.Parse(slot.CronString)
-		fmt.Printf("%+v %s\n", exp, err)
-
 		nextTime := slot.cronExpression.Next(startTime)
 		for ; nextTime.Before(endTime) && nextTime.After(startTime); nextTime = slot.cronExpression.Next(nextTime) {
 			nextEndTime := nextTime.Add(slot.Duration)
 
 			if nextEndTime.After(dayStart) && nextTime.Before(dayStart.Add(time.Hour*24)) {
-				if !slot.UseSameCode {
+				if slot.OneTimePin {
 					pinCode = ecm.CalculatePinCode(nextTime.Format("2006-01-02 15:04"))
 				}
 
@@ -52,6 +51,7 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 					Stop:        nextEndTime,
 					PinCode:     pinCode,
 					Description: slot.Description,
+					OneTimePin:  slot.OneTimePin,
 				})
 			}
 		}
