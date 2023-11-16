@@ -1,36 +1,32 @@
 # Chrono Key Access
 
-Pin-Code basiertes offline Türschließsystem für Codereader.
-Das System ermöglicht es zeitlich beschränkten Zutritt zu gewähren ohne dass das Schließsystem online erreichbar ist.
-Hierzu werden die PinCodes anhand des aktuellen Zeitstempels errechnet.
-Per Konfigurationsdatei werden Zutrittszeiten definiert (z.B. jeden Monatg zwischen 16:00 und 22:00).
-Das Programm berechnet hierzu anhand eines Geheimschlüssel den Code der zum entsprechenden Zeitpunkt gültig ist.
+Chrono Key Access ist ein nutzerfreundliches, Pin-Code-basiertes Offline-Türschließsystem für für Wiegand Codereader Pin-Eingabe.
+Es ermöglicht zeitlich begrenzten Zutritt zu gewähren, ohne eine Online-Verbindung zu benötigen.
+Hierzu wird ein sehr sicherer Algorithmus verwendet, welcher die Pin-Codes anhand des Zeitstempels generiert.
 
-**Vorteile:**
-- Das Schließsystem muss nicht online sein
-- Zugriff für Dritte nur zu den ihnen erlaubten Zeiten
-- einheitliche oder separate Pin-Codes für die Tage der Zeitserien möglich
-- Ermittlung des Pins für einen bestimmten Zeitpunkt per Web-Applikation, API oder Kommandozeile möglich 
-- flexible definiton der Zeitserien über Cron-Syntax
-  - Syntax: <https://github.com/gorhill/cronexpr>
-  - Online Editor: <https://www.freeformatter.com/cron-expression-generator-quartz.html>
+## Die Vorteile
 
-**Nachteile:**
-- Ein an einen Benutzer übermittelten PIN kann nicht mehr entzogen/gesperrt werden
-- Ein Benutzer benötigt evtl. für jede Buchung einen separaten Pin-Code
-- Änderungen an der Konfiguration müssen händisch auf das Schließsystem übertragen werden
+- **Bequemer Zugang**: Ermöglicht Zutritt zu definierten Zeiten ohne Online-Anbindung des Schließsystems
+- **Sicher und Kontrolliert**: Zutritt nur zu vordefinierten Zeiten möglich.
+- **Flexibel und Einfach**: Einheitliche oder separate Pin-Codes für unterschiedliche Tageszeiten.
+- **Nutzerfreundlich**: Anwender können die Pin-Codes über Web-Applikationen, APIs oder die Kommandozeile abfragen.
+- **Einfache Konfiguration**: Flexible Definition der Zutrittszeiten über weit verbreitete Cron-Syntax.
 
+## Nachteile
+
+- Einmal übermittelter PIN an einen Benutzer kann nicht widerrufen/gesperrt werden.
+- Benutzer benötigt eventuell mehrere Pin-Codes (einen pro Tag)
+- Manuelle Übertragung von Konfigurationsänderungen auf das Schließsystem erforderlich.
 
 ## Hintergrund
-Den Mietern der Kalthalle des SV Ringingen soll der Zutritt nur zu den von ihnen gebuchten Zeiten gewährt werden.
-Mangels Internetanschluss kann ein PIN derzeit nicht online auf das Schließsystem übermittelt werden.
-Diese Applikation ermöglicht es den Mietern die Zutrittcodes für ihre gebuchten Zeiten direkt nach der Buchung z.b. per Whatsapp ode Mail mitzuteilen.
 
+Entwickelt, um den Mietern der Kalthalle des SV Ringingen den Zugang nur zu ihren gebuchten Zeiten zu gewähren. Diese Applikation ermöglicht es dem Verwalter der Kalthalle die Zutrittcodes für die gebuchten Zeiten direkt nach der Buchung über WhatsApp oder E-Mail an die Mieter zu senden.
 
 ## Beispielkonfigurationen
 
-**jeden Montag 16:00 bis 20:00 von Januar bis März den gleichen Pin-Code verwenden**
-```
+**Jeden Montag von Januar bis März, von 16:00 bis 20:00 Uhr, denselben Pin-Code verwenden**
+
+```plaintext
 CronString: 0 0 16 ? JAN,FEB,MAR MON *
 Dauer: 4h
 Wechselnder Code: Nein
@@ -44,8 +40,8 @@ Mo 20.03.2023 16:00 - 20:00 PIN:6467
 Mo 27.03.2023 16:00 - 20:00 PIN:6467
 ```
 
-**jeden Montag 16:00 bis 20:00 von Januar bis März einen wechselnden Pin-Code verwenden**
-```
+**Jeden Montag von Januar bis März, von 16:00 bis 20:00 Uhr, einen wechselnden Pin-Code verwenden**
+```plaintext
 CronString: 0 0 16 ? JAN,FEB,MAR MON *
 Dauer: 4h
 Wechselnder Code: Ja
@@ -59,3 +55,6 @@ Mo 20.03.2023 16:00 - 20:00 PIN:8432
 Mo 27.03.2023 16:00 - 20:00 PIN:5320
 ```
 
+**Mehr details zur Cron-Syntax:**  
+[Syntaxreferenz](https://github.com/gorhill/cronexpr)  
+[Online-Editor](https://www.freeformatter.com/cron-expression-generator-quartz.html)  
