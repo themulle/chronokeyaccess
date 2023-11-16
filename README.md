@@ -4,6 +4,8 @@ Chrono Key Access ist ein nutzerfreundliches, Pin-Code-basiertes Offline-Türsch
 Es ermöglicht zeitlich begrenzten Zutritt zu gewähren, ohne eine Online-Verbindung zu benötigen.
 Hierzu wird ein sehr sicherer Algorithmus verwendet, welcher die Pin-Codes anhand des Zeitstempels generiert.
 
+![plot](./docs/schematic_chronokeyaccess.png)
+
 ## Die Vorteile
 
 - **Bequemer Zugang**: Ermöglicht Zutritt zu definierten Zeiten ohne Online-Anbindung des Schließsystems
