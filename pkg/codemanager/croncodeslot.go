@@ -9,11 +9,19 @@ import (
 )
 
 type CronCodeSlot struct {
-	Description    string
+	Name           string
 	CronString     string
 	Duration       time.Duration
 	OneTimePin     bool
 	cronExpression *cronexpr.Expression
+}
+
+func (c CronCodeSlot) GetName() string {
+	return c.Name
+}
+
+func (c CronCodeSlot) GetDescription() string {
+	return c.CronString
 }
 
 func (ces *CronCodeSlot) Init() error {

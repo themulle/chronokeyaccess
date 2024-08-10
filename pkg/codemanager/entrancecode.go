@@ -9,11 +9,11 @@ import (
 )
 
 type EntranceCode struct {
-	Description string
-	OneTimePin  bool
-	Start       time.Time
-	Stop        time.Time
-	PinCode     uint
+	OneTimePin bool
+	Start      time.Time
+	Stop       time.Time
+	PinCode    uint
+	Slot       EntranceSlot
 }
 
 func (ec EntranceCode) Equals(other EntranceCode) bool {
@@ -25,7 +25,7 @@ func (ec EntranceCode) IsInside(t time.Time) bool {
 }
 
 func (ec EntranceCode) String() string {
-	return fmt.Sprintf("%s - %s PIN:%04d (%s)", monday.Format(ec.Start, "Mon 02.01.2006 15:04", monday.LocaleDeDE), ec.Stop.Format("15:04"), ec.PinCode, ec.Description)
+	return fmt.Sprintf("%s - %s PIN:%04d (%s)", monday.Format(ec.Start, "Mon 02.01.2006 15:04", monday.LocaleDeDE), ec.Stop.Format("15:04"), ec.PinCode, ec.Slot.GetName())
 }
 
 type EntranceCodes []EntranceCode

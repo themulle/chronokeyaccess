@@ -47,11 +47,10 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 				}
 
 				retval = append(retval, EntranceCode{
-					Start:       nextTime,
-					Stop:        nextEndTime,
-					PinCode:     pinCode,
-					Description: slot.Description,
-					OneTimePin:  slot.OneTimePin,
+					Start:   nextTime,
+					Stop:    nextEndTime,
+					PinCode: pinCode,
+					Slot:    slot,
 				})
 			}
 		}

@@ -11,6 +11,11 @@ type CodeManager interface {
 	IsValid(time.Time, uint) bool             //check if the code is valid at this time
 }
 
+type EntranceSlot interface {
+	GetName() string
+	GetDescription() string
+}
+
 type codeManagerBase struct {
 	Password string
 }
