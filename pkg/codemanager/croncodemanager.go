@@ -42,7 +42,7 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 			nextEndTime := nextTime.Add(slot.Duration)
 
 			if nextEndTime.After(dayStart) && nextTime.Before(dayStart.Add(time.Hour*24)) {
-				if slot.OneTimePin {
+				if slot.Type == OneTimePin {
 					pinCode = ecm.CalculatePinCode(nextTime.Format("2006-01-02 15:04"))
 				}
 

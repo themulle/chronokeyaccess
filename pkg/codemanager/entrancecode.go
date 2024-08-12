@@ -9,11 +9,10 @@ import (
 )
 
 type EntranceCode struct {
-	OneTimePin bool
-	Start      time.Time
-	Stop       time.Time
-	PinCode    uint
-	Slot       EntranceSlot
+	Start   time.Time
+	Stop    time.Time
+	PinCode uint
+	Slot    EntranceSlot
 }
 
 func (ec EntranceCode) Equals(other EntranceCode) bool {

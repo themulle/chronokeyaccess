@@ -14,17 +14,17 @@ func TestCalculateCronPinCode_Static(t *testing.T) {
 		{
 			CronString: "0 0 16 ? 1 mon,tue,wed,thu,fri 2023",
 			Duration:   time.Hour * 3,
-			OneTimePin: false,
+			Type:       codemanager.OneTimePin,
 		},
 		{
 			CronString: "0 0 20 ? 1 1 2023",
 			Duration:   time.Hour * 3,
-			OneTimePin: false,
+			Type:       codemanager.OneTimePin,
 		},
 		{
 			CronString: "0 0 8 ? * 6 2023",
 			Duration:   time.Hour * 4,
-			OneTimePin: true,
+			Type:       codemanager.OneTimePin,
 		},
 	})
 
@@ -92,7 +92,7 @@ func TestCalculateDynamicCronPinCode_Dynamic(t *testing.T) {
 		{
 			CronString: "0 0 8 ? * 6 2023",
 			Duration:   time.Hour * 4,
-			OneTimePin: true,
+			Type:       codemanager.OneTimePin,
 		},
 	})
 
@@ -129,7 +129,7 @@ func TestCalculateDynamicCronPinCode_Overflow(t *testing.T) {
 		{
 			CronString: "0 0 22 1 2 * 2023",
 			Duration:   time.Hour * 4,
-			OneTimePin: true,
+			Type:       codemanager.OneTimePin,
 		},
 	})
 

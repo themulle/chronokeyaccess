@@ -12,7 +12,7 @@ func LoadConfiguration(configFileName string, createDefaultUnlessExistent bool) 
 	var store codemanager.CodeManagerStore
 	data, err := os.ReadFile(configFileName)
 	if os.IsNotExist(err) {
-		data, err = json.Marshal(GetDefualtConfig())
+		data, err = json.MarshalIndent(GetDefualtConfig(), "", "   ")
 		if err == nil {
 			err = os.WriteFile(configFileName, data, 0700)
 		}

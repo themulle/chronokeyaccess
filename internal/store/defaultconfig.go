@@ -24,15 +24,60 @@ func GetDefualtConfig() codemanager.CodeManagerStore {
 			Name:       "daily",
 			CronString: "0 0 0 * * * *",
 			Duration:   24*time.Hour - time.Nanosecond,
-			OneTimePin: true,
+			Type:       codemanager.OneTimePin,
 		},
 		{
 			Name:       "business hours",
 			CronString: "0 0 7,11,15,19 * * * *",
 			Duration:   5 * time.Hour,
-			OneTimePin: true,
+			Type:       codemanager.OneTimePin,
 		},
 	}
+
+	store.Slots = append(store.Slots, codemanager.CronCodeSlots{
+		{
+			Name:       "monday evening",
+			CronString: "0 0 17 * * monday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "tuesday evening",
+			CronString: "0 0 17 * * tuesday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "wednesday evening",
+			CronString: "0 0 17 * * wednesday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "thursday evening",
+			CronString: "0 0 17 * * thursday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "friday evening",
+			CronString: "0 0 17 * * friday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "saturday evening",
+			CronString: "0 0 17 * * saturday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+		{
+			Name:       "sunday evening",
+			CronString: "0 0 17 * * sunday *",
+			Duration:   7 * time.Hour,
+			Type:       codemanager.SeriesPin,
+		},
+	}...)
 
 	return store
 }

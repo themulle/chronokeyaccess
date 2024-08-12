@@ -14,6 +14,7 @@ type CodeManager interface {
 type EntranceSlot interface {
 	GetName() string
 	GetDescription() string
+	GetType() CronCodeSlotType
 }
 
 type codeManagerBase struct {
