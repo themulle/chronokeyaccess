@@ -11,13 +11,15 @@ import (
 )
 
 var (
-	configFileName   string
-	pinCode          uint
-	showCurrentCodes uint
+	configFileName      string
+	personalPinFileName string
+	pinCode             uint
+	showCurrentCodes    uint
 )
 
 func init() {
 	flag.StringVar(&configFileName, "c", "config.json", "config file name")
+	flag.StringVar(&personalPinFileName, "p", "personalpin.csv", "personal pin csv file name")
 	flag.UintVar(&pinCode, "t", 0, "test pin code")
 	flag.UintVar(&showCurrentCodes, "s", 1, "show codes for the next n days")
 	flag.Parse()
@@ -25,7 +27,7 @@ func init() {
 
 func main() {
 	cm, err := func() (codemanager.CodeManager, error) {
-		codeManagerStore, err := store.LoadConfiguration(configFileName, true)
+		codeManagerStore, err := store.LoadConfiguration(configFileName, personalPinFileName, true)
 		if err != nil {
 			return nil, err
 		}

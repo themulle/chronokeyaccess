@@ -15,6 +15,7 @@ type EntranceSlot interface {
 	GetName() string
 	GetDescription() string
 	GetType() CronCodeSlotType
+	GetPinCode() uint
 }
 
 type codeManagerBase struct {

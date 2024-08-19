@@ -35,7 +35,12 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 		endTime := ecm.truncateToDay(dayTime).Add(time.Hour * 24)
 		dayStart := ecm.truncateToDay(dayTime)
 
-		pinCode := ecm.CalculatePinCode(slot.CronString)
+		pinCode := uint(0)
+		if slot.Type == OneTimePin || slot.Type == SeriesPin {
+			pinCode = ecm.CalculatePinCode(slot.CronString)
+		} else if slot.Type == PersonalPin && slot.PinCode > 0 {
+			pinCode = slot.PinCode
+		}
 
 		nextTime := slot.cronExpression.Next(startTime)
 		for ; nextTime.Before(endTime) && nextTime.After(startTime); nextTime = slot.cronExpression.Next(nextTime) {

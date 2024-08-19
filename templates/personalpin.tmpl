@@ -1,0 +1,20 @@
+{{ template "header.tmpl" . }}
+        <ion-grid>
+            <ion-row>
+                <ion-col size-md="6" offset-md="3" class="card-center">
+                <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                    <ion-card class="card-center">
+                      <ion-card-content class="card-center">
+                        <ion-datetime id="dateSelector" first-day-of-week="1" presentation="date" multiple="true" showClearButton="true" min="{{.min}}" max="{{.max}}"></ion-datetime>
+                      </ion-card-content>
+                    </ion-card>
+                </div>
+                </ion-col>
+            </ion-row>
+            <ion-row >
+              <ion-col size-md="6" offset-md="3" id="codelist">
+              </ion-col>
+            </ion-row>
+        </ion-grid>
+{{$selectedTab:="PersonalPin"}}
+{{ template "footer.tmpl" $selectedTab }}

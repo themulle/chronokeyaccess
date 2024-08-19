@@ -1,7 +1,9 @@
 package store
 
 import (
+	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/sethvargo/go-password/password"
@@ -10,13 +12,7 @@ import (
 
 func GetDefualtConfig() codemanager.CodeManagerStore {
 	store := codemanager.CodeManagerStore{
-		Password: "1234567890",
-	}
-
-	if password, err := password.Generate(10, 4, 2, false, true); err == nil {
-		store.Password = password
-	} else {
-		log.Printf("error generating password: %s", err)
+		Password: fmt.Sprintf("%d", GeneratePinCode(1234567890, 5)),
 	}
 
 	store.Slots = codemanager.CronCodeSlots{
@@ -79,5 +75,41 @@ func GetDefualtConfig() codemanager.CodeManagerStore {
 		},
 	}...)
 
+	store.Slots = append(store.Slots, codemanager.CronCodeSlots{
+		{
+			Name:       "default",
+			CronString: "0 0 7 * * * *",
+			Duration:   17*time.Hour - time.Nanosecond,
+			Type:       codemanager.PersonalPin,
+		},
+		{
+			Name:       "always",
+			CronString: "0 0 0 * * * *",
+			Duration:   24*time.Hour - time.Nanosecond,
+			Type:       codemanager.PersonalPin,
+		},
+	}...)
+
+	{
+
+		store.PersonalCodes = codemanager.PersonalCodes{
+			{Name: "DefaultUser", PinCode: GeneratePinCode(12345, 5), SlotName: "default"},
+			{Name: "AdminUser", PinCode: GeneratePinCode(56789, 5), SlotName: "always"},
+		}
+	}
+
 	return store
+}
+
+func GeneratePinCode(defaultPinCode uint, length int) uint {
+	if password, err := password.Generate(length, length, 0, false, true); err == nil {
+		if defaultPin, err := strconv.Atoi(password); err == nil {
+			return uint(defaultPin)
+		} else {
+			log.Printf("error parsing pin: %s", err)
+		}
+	} else {
+		log.Printf("error generating password: %s", err)
+	}
+	return defaultPinCode
 }
