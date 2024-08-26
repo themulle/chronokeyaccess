@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/themulle/chronokeyaccess/internal/store"
+	"github.com/themulle/chronokeyaccess/pkg/accesslog"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
+	"github.com/themulle/chronokeyaccess/pkg/dateparser"
 )
 
 type CodeRequest struct {
@@ -96,11 +98,7 @@ func getSeriesPin(cr CodeRequest) (codemanager.EntranceCodes, error) {
 	for _, dayTimeString := range cr.DayTime {
 		var dayTime time.Time
 		var err error
-		if dayTime, err = time.Parse("2006-01-02T15:04:05-0700", dayTimeString); err == nil {
-		} else if dayTime, err = time.Parse("2006-01-02", dayTimeString); err == nil {
-		} else if dayTime, err = time.Parse("2006-01-02T15:04", dayTimeString); err == nil {
-		} else if dayTime, err = time.Parse("01.02.2006", dayTimeString); err == nil {
-		} else {
+		if dayTime, err = dateparser.Parse(dayTimeString); err != nil {
 			return retval, fmt.Errorf("invalid date format: %s", dayTimeString)
 		}
 		log.Printf("code request for: %s", dayTime.String())
@@ -119,4 +117,16 @@ func getSeriesPin(cr CodeRequest) (codemanager.EntranceCodes, error) {
 
 	retval.Sort()
 	return retval.Uniq(), nil
+}
+
+func getAccessLogs() (accesslog.AccessLogs, error) {
+	retval := accesslog.AccessLogs{}
+	var err error
+
+	if retval, err = store.LoadAccessLogCSV("accesslog.csv"); err != nil {
+		return retval, err
+	}
+
+	retval.Sort()
+	return retval, nil
 }

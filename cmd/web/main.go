@@ -23,6 +23,10 @@ func setupRouter() *gin.Engine {
 	r.LoadHTMLGlob("../../templates/*")
 	r.Static("/static", "../../frontend/")
 
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusTemporaryRedirect, "/onetimepin")
+	})
+
 	r.GET("/seriespin", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "seriespin.tmpl", gin.H{
 			"min": time.Now().Format("2006-01-02T15:04:05"),
@@ -40,6 +44,17 @@ func setupRouter() *gin.Engine {
 		c.HTML(http.StatusOK, "personalpin.tmpl", gin.H{
 			"min": time.Now().Format("2006-01-02T15:04:05"),
 			"max": time.Now().Add(time.Hour * 24 * 180).Format("2006-01-02T15:04:05"),
+		})
+	})
+	r.GET("/accesslog", func(c *gin.Context) {
+		accessLogs, err := getAccessLogs()
+		if err != nil {
+			c.Error(err)
+			return
+		}
+
+		c.HTML(http.StatusOK, "accesslog.tmpl", gin.H{
+			"accessLogs": accessLogs,
 		})
 	})
 
