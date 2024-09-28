@@ -1,13 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
 	"log"
 	"log/slog"
 	"os"
+	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -39,8 +42,14 @@ func main() {
 	data0pin := flag.Int("data0pin", 14, "data0 pin number")
 	data1pin := flag.Int("data1pin", 15, "data1 pin number")
 	logLevelFlag := flag.String("loglevel", "info", "Log level (debug, info, error)")
-	// Parse command-line flags
+	exec := flag.String("exec", "", "application to execute after pin entry")
+	help := flag.Bool("help", false, "show help")
 	flag.Parse()
+
+	if help != nil && *help {
+		flag.PrintDefaults()
+		return
+	}
 
 	setupLogger(*logLevelFlag)
 
@@ -70,6 +79,13 @@ func main() {
 					"stop", stop)
 
 				fmt.Printf("%d %s %s %s %t\n", number, start.Format(time.RFC3339), stop.Format(time.RFC3339), wieganddecoder.BitsToString(bits), err == nil)
+				if exec != nil && len(strings.TrimSpace(*exec)) > 0 {
+					if err := runExternalApp(*exec, fmt.Sprintf("%d", number)); err != nil {
+						slog.Error("error executing application", "error", err)
+					} else {
+						slog.Info("executed", "app", *exec, "code", fmt.Sprintf("%d", number))
+					}
+				}
 			}
 
 		}
@@ -90,4 +106,28 @@ func startShutdownListener(cancel context.CancelFunc) {
 		log.Println("shutdown")
 		cancel()
 	}()
+}
+
+func runExternalApp(appPath string, argument string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	var stdout, stderr bytes.Buffer
+	cmd := exec.CommandContext(ctx, appPath, argument)
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	// Run the command
+	err := cmd.Run()
+	if ctx.Err() == context.DeadlineExceeded {
+		return fmt.Errorf("command timed out")
+	}
+
+	slog.Debug("executing application", "appPath", appPath, "argument", argument, "error", err, "stdout", string(stdout.Bytes()), "stderr", string(stderr.Bytes()))
+
+	if err != nil {
+		return fmt.Errorf("failed to run %s: %w", appPath, err)
+	}
+
+	return nil
 }

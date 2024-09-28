@@ -66,7 +66,7 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 func (ecm *cronCodeManager) IsValid(currentTime time.Time, pinCode uint) bool {
 	codes := ecm.GetEntranceCodes(currentTime)
 	for _, c := range codes {
-		if c.IsInside(currentTime) {
+		if c.IsInside(currentTime) && c.PinCode == pinCode {
 			return true
 		}
 	}

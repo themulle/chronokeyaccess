@@ -21,7 +21,7 @@ func init() {
 	flag.StringVar(&configFileName, "c", "config.json", "config file name")
 	flag.StringVar(&personalPinFileName, "p", "personalpin.csv", "personal pin csv file name")
 	flag.UintVar(&pinCode, "t", 0, "test pin code")
-	flag.UintVar(&showCurrentCodes, "s", 1, "show codes for the next n days")
+	flag.UintVar(&showCurrentCodes, "s", 0, "show codes for the next n days")
 	flag.Parse()
 }
 
@@ -39,16 +39,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if pinCode > 0 {
-		if cm.IsValid(time.Now(), pinCode) {
-			fmt.Println("ok")
-			os.Exit(0)
-		} else {
-			fmt.Println("invalid")
-			os.Exit(0)
-		}
-	}
-
 	if showCurrentCodes > 0 {
 		allCodes := codemanager.EntranceCodes{}
 		for i := 0; i < int(showCurrentCodes); i++ {
@@ -59,6 +49,16 @@ func main() {
 		allCodes = allCodes.Uniq()
 		fmt.Println(allCodes.String())
 		os.Exit(0)
+	}
+
+	if pinCode > 0 {
+		if cm.IsValid(time.Now(), pinCode) {
+			fmt.Println("ok")
+			os.Exit(0)
+		} else {
+			fmt.Println("invalid")
+			os.Exit(0)
+		}
 	}
 
 	flag.PrintDefaults()
