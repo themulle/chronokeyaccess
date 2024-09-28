@@ -1,15 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-func setupRouter() *gin.Engine {
+func setupRouter(baseDir string) *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
@@ -18,8 +21,8 @@ func setupRouter() *gin.Engine {
 		"formatAsPin": func(pin uint) string { return fmt.Sprintf("%04d", pin) },
 	})
 
-	r.LoadHTMLGlob("../../templates/*")
-	r.Static("/static", "../../frontend/")
+	r.LoadHTMLGlob(filepath.Join(baseDir, "/templates") + string(os.PathSeparator) + "*")
+	r.Static("/static", filepath.Join(baseDir, "/frontend")+string(os.PathSeparator))
 
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "/onetimepin")
@@ -98,8 +101,16 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	listenPort := flag.String("port", "0.0.0.0:8080", "listen port")
+	basePath := flag.String("basePath", "../../", "base path")
+	help := flag.Bool("help", false, "show help")
+	flag.Parse()
 
-	r := setupRouter()
-	// Listen and Server in 0.0.0.0:8080
-	r.Run("127.0.0.1:8080")
+	if help != nil && *help {
+		flag.PrintDefaults()
+		return
+	}
+
+	r := setupRouter(*basePath)
+	r.Run(*listenPort)
 }

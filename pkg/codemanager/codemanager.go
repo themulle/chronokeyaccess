@@ -7,8 +7,8 @@ import (
 )
 
 type CodeManager interface {
-	GetEntranceCodes(time.Time) EntranceCodes //get all entrance codes of this day
-	IsValid(time.Time, uint) bool             //check if the code is valid at this time
+	GetEntranceCodes(time.Time) EntranceCodes     //get all entrance codes of this day
+	IsValid(time.Time, uint) (bool, EntranceCode) //check if the code is valid at this time
 }
 
 type EntranceSlot interface {

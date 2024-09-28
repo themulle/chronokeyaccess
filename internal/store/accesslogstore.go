@@ -32,7 +32,7 @@ func LoadAccessLogCSV(filePath string) (accesslog.AccessLogs, error) {
 
 		ts, err := dateparser.Parse(record[0])
 		if err != nil {
-			fmt.Errorf("invalid timestamp in record: %v", record)
+			return nil, fmt.Errorf("invalid timestamp in record: %v", record)
 		}
 
 		pinCode, err := strconv.ParseUint(record[1], 10, 32)

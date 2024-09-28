@@ -15,11 +15,13 @@ var (
 	personalPinFileName string
 	pinCode             uint
 	showCurrentCodes    uint
+	accessLogFile       string
 )
 
 func init() {
 	flag.StringVar(&configFileName, "c", "config.json", "config file name")
-	flag.StringVar(&personalPinFileName, "p", "personalpin.csv", "personal pin csv file name")
+	flag.StringVar(&personalPinFileName, "p", "personalcodes.csv", "personal pin csv file name")
+	flag.StringVar(&accessLogFile, "accesslog", "accesslog.csv", "accesslog file")
 	flag.UintVar(&pinCode, "t", 0, "test pin code")
 	flag.UintVar(&showCurrentCodes, "s", 0, "show codes for the next n days")
 	flag.Parse()
@@ -52,14 +54,36 @@ func main() {
 	}
 
 	if pinCode > 0 {
-		if cm.IsValid(time.Now(), pinCode) {
+		valid, details := cm.IsValid(time.Now(), pinCode)
+		userString := "invalid"
+
+		if valid {
+			userString = details.Slot.GetName()
 			fmt.Println("ok")
-			os.Exit(0)
 		} else {
 			fmt.Println("invalid")
-			os.Exit(0)
 		}
+
+		if accessLogFile != "" {
+			appendAccessLog(accessLogFile, fmt.Sprintf("%s,%d,%s\n", time.Now().Format("2006-01-02T15:04:05"), pinCode, userString))
+		}
+
+		os.Exit(0)
 	}
 
 	flag.PrintDefaults()
+}
+
+func appendAccessLog(fileName, content string) error {
+	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err = f.WriteString(content); err != nil {
+		return err
+	}
+
+	return nil
 }
