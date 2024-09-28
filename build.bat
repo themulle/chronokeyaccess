@@ -10,3 +10,4 @@ REM set PATH=C:\Go\bin;%PATH%
 
 REM Compile the Go application
 go build -o bin/wgreader_rpi .\cmd\wgreader\main.go
+go build -o bin/dooropener_rpi .\cmd\dooropener\main.go
