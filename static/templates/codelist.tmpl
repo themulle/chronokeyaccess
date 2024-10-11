@@ -4,8 +4,8 @@
 <input type="hidden" id="WhatsappPostfix" value="⚽ Viel Spaß wünscht der SV Ringingen ⚽">
 
 <ion-row class="ion-justify-content-center">
-    <ion-button size="small" id="copyButton" color="success" onclick="copyText()" backgroun>Copy to Whatsapp</ion-button>
-    <ion-button size="small" id="copyButton" color="medium" onclick="copyText()" backgroun>Copy to E-Mail</ion-button>
+    <ion-button size="small" id="copyButton" color="success" onclick="copyText('.copyContentWhatsapp')" backgroun>Copy to Whatsapp</ion-button>
+    <ion-button size="small" id="copyButton" color="medium" onclick="copyText('.copyContentEmail')" backgroun>Copy to E-Mail</ion-button>
 </ion-row>
 <ion-row>
     <ion-button size="small" onclick="setTimeRange('');">alle</ion-button>
@@ -18,7 +18,8 @@
         <ion-col><ion-label>{{$val.Start.Format "02.01.2006"}} <b>{{$val.Start.Format "15:04"}}</b> {{$val.Stop.Format "15:04"}}</ion-label></ion-col>
         <ion-col><ion-chip>{{$val.PinCode | formatAsPin}}</ion-chip></ion-col>
         <ion-col><ion-note><i>{{$val.Slot.Name}}</i></ion-note></ion-col>
-        <input type="hidden" class="copyContent" value="* {{$val.Start.Format "02.01.2006"}} _{{$val.Start.Format "15:04"}}-{{$val.Stop.Format "15:04"}}_ PIN:{{$val.PinCode | formatAsUTF8Pin}}">
+        <input type="hidden" class="copyContentWhatsapp" value="* {{$val.Start.Format "02.01.2006"}} {{$val.Start.Format "15:04"}}-{{$val.Stop.Format "15:04"}} PIN:{{$val.PinCode | formatAsUTF8Pin}}">
+        <input type="hidden" class="copyContentEmail" value="{{$val.Start.Format "02.01.2006"}} {{$val.Start.Format "15:04"}}-{{$val.Stop.Format "15:04"}} PIN:{{$val.PinCode | formatAsPin}}">
     </ion-row>
 {{end}}
 

@@ -26,9 +26,9 @@ function showPinCodes(paramDaytime) {
     });
 }
 
-async function copyText() {
+async function copyText(ccClassName) {
   var contentToCopy = "";
-  $(".copyContent").each(function() {
+  $(ccClassName).each(function() {
       contentToCopy += $(this).val() + "\n";
   });
  

@@ -18,13 +18,8 @@ import (
 
 var (
 	configFileName string
-	personalPinFileName string
-	accessLogFile string
-	listenPort string
-	basePath string
+	config webconfig
 
-	apiUser string
-	webUser string
 	
 	showHelp bool
 
@@ -32,20 +27,20 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configFileName, "c", "config.json", "config file name")
-	flag.StringVar(&personalPinFileName, "p", "personalcodes.csv", "personal pin csv file name")
-	flag.StringVar(&accessLogFile, "accesslog", "accesslog.csv", "accesslog file")
-	flag.StringVar(&webUser, "webuser", "webuser:password", "basic auth file")
-	flag.StringVar(&apiUser, "apiuser", "api:password", "basic auth file")
-	flag.StringVar(&listenPort,"port", "0.0.0.0:8080", "listen port")
-	flag.StringVar(&basePath, "basePath", "../../", "base path")
+	config.ConfigFileName="config.json"
+	config.PersonalPinFileName="personalcodes.csv"
+	config.AccessLogFileName="accesslog.csv"
+	config.ListenPort="0.0.0.0:8080"
+
+	config.WebUsers=map[string]string{"webuser":"password"}
+	config.ApiUsers=map[string]string{"apiuser":"password"}
+
+	flag.StringVar(&configFileName, "config", "webconfig.json", "webconfig json")
 	flag.BoolVar(&showHelp, "help", false, "show help")
 	flag.Parse()
 }
 
-func setupRouter(baseDir string, cm codemanager.CodeManager) *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
+func setupRouter(cm codemanager.CodeManager) *gin.Engine {
 	r := gin.Default()
 
 	funcMap:=template.FuncMap{
@@ -65,28 +60,17 @@ func setupRouter(baseDir string, cm codemanager.CodeManager) *gin.Engine {
 
     	staticFS, _ := fs.Sub(static.StaticFs, "frontend")
     	r.StaticFS("/static", http.FS(staticFS))
+
+		//r.LoadHTMLGlob("../../static/templates" + string(os.PathSeparator) + "*")
+		//r.Static("/static", "../../static/templates"+string(os.PathSeparator))
 	}
 	
-	//r.LoadHTMLGlob(filepath.Join(baseDir, "/templates") + string(os.PathSeparator) + "*")
-	//r.Static("/static", filepath.Join(baseDir, "/frontend")+string(os.PathSeparator))
-
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "/onetimepin")
 	})
 
-	userAuth := r.Group("/")
-	if parts:=strings.Split(webUser,":"); len(parts)==2 {
-		userAuth = r.Group("/", gin.BasicAuth(gin.Accounts{
-			parts[0]: parts[1],
-		}))
-	}
-
-	apiAuth := r.Group("/")
-	if parts:=strings.Split(apiUser,":"); len(parts)==2 {
-		apiAuth = r.Group("/", gin.BasicAuth(gin.Accounts{
-			parts[0]: parts[1],
-		}))
-	}
+	userAuth := r.Group("/", gin.BasicAuth(gin.Accounts(config.WebUsers)))
+	apiAuth := r.Group("/", gin.BasicAuth(gin.Accounts(config.ApiUsers)))
 
 	userAuth.GET("/seriespin", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "seriespin.tmpl", gin.H{
@@ -108,7 +92,7 @@ func setupRouter(baseDir string, cm codemanager.CodeManager) *gin.Engine {
 		})
 	})
 	userAuth.GET("/accesslog", func(c *gin.Context) {
-		accessLogs, err := getAccessLogs()
+		accessLogs, err := getAccessLogs(config.AccessLogFileName)
 		if err != nil {
 			c.Error(err)
 			return
@@ -171,7 +155,7 @@ func setupRouter(baseDir string, cm codemanager.CodeManager) *gin.Engine {
 }
 
 func loadCodeManager() (codemanager.CodeManager, error) {
-	codeManagerStore, err := store.LoadConfiguration(configFileName, personalPinFileName, true)
+	codeManagerStore, err := store.LoadConfiguration(config.ConfigFileName, config.PersonalPinFileName)
 	if err!=nil {
 		return nil, err
 	}
@@ -186,12 +170,18 @@ func main() {
 		return
 	}
 
+	var err error
+	if config, err = store.LoadOrInitJsonConfiguration(configFileName,config); err!=nil {
+		fmt.Println(err)
+		return
+	}
+
 	cm, err:= loadCodeManager()
 	if err!=nil {
 		fmt.Println(err)
 		return
 	}
 
-	r := setupRouter(basePath, cm)
-	r.Run(listenPort)
+	r := setupRouter(cm)
+	r.Run(config.ListenPort)
 }

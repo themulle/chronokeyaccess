@@ -3,8 +3,6 @@ package codemanager
 import (
 	"fmt"
 	"time"
-
-	"github.com/themulle/cronexpr"
 )
 
 type cronCodeManager struct {
@@ -44,11 +42,6 @@ func (ecm *cronCodeManager) GetEntranceCodes(dayTime time.Time) EntranceCodes {
 			pinCode = slot.PinCode
 		}
 
-		if slot.Name=="SampleUser" {
-			fmt.Println(slot.cronExpression)
-			expr,err:=cronexpr.Parse(slot.CronString)
-			fmt.Println(expr,err)
-		}
 		nextTime := slot.cronExpression.Next(startTime)
 		for ; nextTime.Before(endTime) && nextTime.After(startTime); nextTime = slot.cronExpression.Next(nextTime) {
 			nextEndTime := nextTime.Add(slot.Duration)

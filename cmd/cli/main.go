@@ -29,7 +29,7 @@ func init() {
 
 func main() {
 	cm, err := func() (codemanager.CodeManager, error) {
-		codeManagerStore, err := store.LoadConfiguration(configFileName, personalPinFileName, true)
+		codeManagerStore, err := store.LoadConfiguration(configFileName, personalPinFileName)
 		if err != nil {
 			return nil, err
 		}

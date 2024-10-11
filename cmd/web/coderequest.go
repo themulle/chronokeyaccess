@@ -65,11 +65,11 @@ func getCodes(cr CodeRequest, cm codemanager.CodeManager ) (codemanager.Entrance
 	return retval.Uniq(), nil
 }
 
-func getAccessLogs() (accesslog.AccessLogs, error) {
+func getAccessLogs(fileName string) (accesslog.AccessLogs, error) {
 	var retval accesslog.AccessLogs
 	var err error
 
-	if retval, err = store.LoadAccessLogCSV("accesslog.csv"); err != nil {
+	if retval, err = store.LoadAccessLogCSV(fileName); err != nil {
 		return retval, err
 	}
 

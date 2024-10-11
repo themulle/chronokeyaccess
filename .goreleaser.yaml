@@ -14,7 +14,9 @@ before:
     - go mod tidy
 
 builds:
-  - main: ./cmd/web
+  - id: web
+    main: ./cmd/web
+    binary: chronokeyaccess_web
     env:
       - CGO_ENABLED=0
     goos:
@@ -29,20 +31,57 @@ builds:
       - goos: windows
         goarch: arm
     mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: cli
+    main: ./cmd/cli
+    binary: chronokeyaccess_cli
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm
+    goarm:
+      - 6
+    ignore:
+      - goos: windows
+        goarch: arm
+    mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: wgreader
+    main: ./cmd/wgreader
+    binary: chronokeyaccess_wgreader
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - 6
+    mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: dooropener
+    main: ./cmd/dooropener
+    binary: chronokeyaccess_dooropener
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - 6
+    mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
   - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
 
 nfpms:
-  - vendor: theMulle
+  - id: web_pkg
+    package_name: chronokeyaccess_web
+    builds:
+      - web
+    vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>
     description: ChronoKeyAccess Web App
@@ -51,6 +90,48 @@ nfpms:
       - deb
     provides:
       - chronokeyaccess_web
+    bindir: /usr/bin
+  - id: cli_pkg
+    package_name: chronokeyaccess_cli
+    builds:
+      - cli
+    vendor: TheMulle
+    homepage: https://github.com/themulle
+    maintainer: Manuel Müller <themulle@gmail.com>
+    description: ChronoKeyAccess Cli App
+    license: Apache 2.0
+    formats:
+      - deb
+    provides:
+      - chronokeyaccess_cli
+    bindir: /usr/bin
+  - id: wgreader_pkg
+    package_name: chronokeyaccess_wgreader
+    builds:
+      - wgreader
+    vendor: TheMulle
+    homepage: https://github.com/themulle
+    maintainer: Manuel Müller <themulle@gmail.com>
+    description: ChronoKeyAccess Wiegand Reader App
+    license: Apache 2.0
+    formats:
+      - deb
+    provides:
+      - chronokeyaccess_wgreader
+    bindir: /usr/bin
+  - id: dooropener_pkg
+    package_name: chronokeyaccess_dooropener
+    builds:
+      - dooropener
+    vendor: TheMulle
+    homepage: https://github.com/themulle
+    maintainer: Manuel Müller <themulle@gmail.com>
+    description: ChronoKeyAccess Wiegand Reader App
+    license: Apache 2.0
+    formats:
+      - deb
+    provides:
+      - chronokeyaccess_dooropener
     bindir: /usr/bin
 
 changelog:
