@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/goodsign/monday"
 	"github.com/themulle/chronokeyaccess/internal/store"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
 )
@@ -19,7 +20,6 @@ Alice,1234,2024-2030,1
 Bob,5678,*
 Charlie,9101,Mo,2024
 Peter,9101,"14:00-16:00 Mo,Mi",`
-
 	
 	if err := os.WriteFile(testFilePath, []byte(content), 0644); err != nil {
 		t.Fatalf("failed to create test CSV file: %v", err)
@@ -57,7 +57,7 @@ Peter,9101,"14:00-16:00 Mo,Mi",`
 
 	for _, tt := range tests {
 		t.Run(tt.filePath, func(t *testing.T) {
-			codes, err := store.LoadPersonalCodeCSV(tt.filePath)
+			codes, err := store.LoadPersonalCodeCSV(tt.filePath, monday.LocaleDeDE)
 
 			if (err != nil) != tt.expectErr {
 				t.Fatalf("expected error: %v, got: %v", tt.expectErr, err)

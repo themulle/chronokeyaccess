@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/goodsign/monday"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
 )
 
@@ -30,7 +31,7 @@ func LoadConfiguration(configFileName string, personalCodeFileName string, creat
 
 	{
 		var pc codemanager.PersonalCodes
-		pc, err = LoadPersonalCodeCSV(personalCodeFileName)
+		pc, err = LoadPersonalCodeCSV(personalCodeFileName, monday.LocaleDeDE)
 		if os.IsNotExist(err) {
 			if err = WritePersonalCodeCSV(GetDefualtConfig().PersonalCodes, personalCodeFileName); err != nil {
 				err = fmt.Errorf("error generating personal code file: %w", err)

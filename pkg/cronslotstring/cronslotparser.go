@@ -9,59 +9,8 @@ import (
 	"github.com/themulle/cronexpr"
 )
 
-// Wochentage und Monate in Englisch und Deutsch
-var weekdayMapDE = map[string]string{
-	"Mo":  "1",
-	"Di":  "2",
-	"Mi":  "3",
-	"Do":  "4",
-	"Fr":  "5",
-	"Sa":  "6",
-	"So":  "0",
-}
-
-var weekdayMapEN = map[string]string{
-	"Sun": "0",
-	"Mon": "1",
-	"Tue": "2",
-	"Wed": "3",
-	"Thu": "4",
-	"Fri": "5",
-	"Sat": "6",
-}
-
-var monthMapDE = map[string]string{
-	"Jan":  "1",
-	"Feb":  "2",
-	"Mar":  "3",
-	"Apr":  "4",
-	"Mai":  "5",
-	"Jun":  "6",
-	"Jul":  "7",
-	"Aug":  "8",
-	"Sep":  "9",
-	"Okt":  "10",
-	"Nov":  "11",
-	"Dez":  "12",
-}
-
-var monthMapEN = map[string]string{
-	"Jan":  "1",
-	"Feb":  "2",
-	"Mar":  "3",
-	"Apr":  "4",
-	"Mai":  "5",
-	"Jun":  "6",
-	"Jul":  "7",
-	"Aug":  "8",
-	"Sep":  "9",
-	"Oct":  "10",
-	"Nov":  "11",
-	"Dec":  "12",
-}
-
 // ConvertToCron takes an input string with a time range, days, and months, and converts it to a valid cron expression
-func ParseCronSlotString(input string) (string, time.Duration, error) {
+func (csg * CronSlotGenerator) ParseCronSlotString(input string) (string, time.Duration, error) {
 	// Normalize input by replacing extra spaces, and common separators
 	input = normalizeInput(input)
 
@@ -81,8 +30,8 @@ func ParseCronSlotString(input string) (string, time.Duration, error) {
 	var duration time.Duration = 24 * time.Hour - 1
 
 	timeRegex := regexp.MustCompile(`^(\d{1,2}):(\d{2})-(\d{1,2}:\d{2})$`)
-	monthRegex := regexp.MustCompile(`^(`+strings.Join(getMapKeys(monthMapDE,monthMapEN),"|")+`)`)
-	weekDayRegex := regexp.MustCompile(`^(`+strings.Join(getMapKeys(weekdayMapDE,weekdayMapEN),"|")+`)`)
+	monthRegex := regexp.MustCompile(`^(`+strings.Join(getMapKeys(csg.LocaleMonthNameMap,csg.MonthNameMap),"|")+`)`)
+	weekDayRegex := regexp.MustCompile(`^(`+strings.Join(getMapKeys(csg.LocaleWeekDayMap,csg.WeekDayMap),"|")+`)`)
 	yearRegex := regexp.MustCompile(`^(\d{4})`)
 	for _, part := range parts {
 		timeMatches := timeRegex.FindStringSubmatch(part)
@@ -99,9 +48,9 @@ func ParseCronSlotString(input string) (string, time.Duration, error) {
 				minutes=timeMatches[2]
 			}
 		} else if monthRegex.MatchString(part) {
-			months=extractMonths(part)
+			months=csg.extractMonths(part)
 		} else if weekDayRegex.MatchString(part) {
-			weekdays=extractWeekDays(part)
+			weekdays=csg.extractWeekDays(part)
 		} else if yearRegex.MatchString(part){
 			years=extractYears(part)
 		} else {
@@ -143,15 +92,15 @@ func calculateDuration(startTime, endTime string) (time.Duration, error) {
 	return end.Sub(start), nil
 }
 
-func extractWeekDays(input string) (string) {
-	for dayName, dayNumber := range weekdayMapDE {
+func (csg * CronSlotGenerator) extractWeekDays(input string) (string) {
+	for dayName, dayNumber := range csg.LocaleWeekDayMap {
 			input=strings.ReplaceAll(input,dayName,dayNumber)
 	}
 	return input
 }
 
-func extractMonths(input string) (string) {
-	for monthName, monthNumber := range monthMapDE {
+func (csg * CronSlotGenerator) extractMonths(input string) (string) {
+	for monthName, monthNumber := range csg.LocaleMonthNameMap {
 			input=strings.ReplaceAll(input,monthName,monthNumber)
 	}
 	return input

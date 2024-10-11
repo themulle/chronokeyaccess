@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/goodsign/monday"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
 	"github.com/themulle/chronokeyaccess/pkg/cronslotstring"
 )
@@ -17,7 +18,7 @@ import (
 var PersonalCodeCsvHeader []string = []string{"Name", "PinCode", "Slot"}
 
 // Parse liest die CSV-Datei und gibt eine Liste von codemanager.PersonalCodes zurück
-func LoadPersonalCodeCSV(filePath string) (codemanager.PersonalCodes, error) {
+func LoadPersonalCodeCSV(filePath string, locale monday.Locale) (codemanager.PersonalCodes, error) {
 	var combinedError error
 	
 	file, err := os.Open(filePath)
@@ -31,6 +32,9 @@ func LoadPersonalCodeCSV(filePath string) (codemanager.PersonalCodes, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	csg:=cronslotstring.NewCronSlotGenerator()
+	csg.SetLocale(locale)
 
 	var codes codemanager.PersonalCodes
 	for line, record := range records {
@@ -56,7 +60,7 @@ func LoadPersonalCodeCSV(filePath string) (codemanager.PersonalCodes, error) {
 
 		cronString:=""
 		var duration time.Duration
-			cronString, duration, err = cronslotstring.ParseCronSlotString(strings.Join(record[2:]," "))
+			cronString, duration, err = csg.ParseCronSlotString(strings.Join(record[2:]," "),)
 			if err!=nil {
 				combinedError=errors.Join(err)
 				continue //skip line

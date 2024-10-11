@@ -5,10 +5,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/goodsign/monday"
 	"github.com/themulle/chronokeyaccess/pkg/cronslotstring"
 )
 
 func TestConvertToCronSlot(t *testing.T) {
+	csg := cronslotstring.NewCronSlotGenerator()
+	csg.SetLocale(monday.LocaleDeDE)
+
 	testCases := []struct {
 		input          string
 		expectedCron   string
@@ -30,7 +34,7 @@ func TestConvertToCronSlot(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		cron, dur, err := cronslotstring.ParseCronSlotString(tc.input)
+		cron, dur, err := csg.ParseCronSlotString(tc.input)
 
 		if err != nil && tc.expectedErrMsg == "" {
 			fmt.Printf("unexpected error: %v\n", err)
@@ -48,6 +52,9 @@ func TestConvertToCronSlot(t *testing.T) {
 }
 
 func TestReverseCronSlot(t *testing.T) {
+	csg := cronslotstring.NewCronSlotGenerator()
+	csg.SetLocale(monday.LocaleDeDE)
+
 	tests := []struct {
 		cronStr  string
 		duration time.Duration
@@ -77,7 +84,7 @@ func TestReverseCronSlot(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.cronStr, func(t *testing.T) {
-			result, err := cronslotstring.GenerateCronSlotString(tt.cronStr, tt.duration)
+			result, err := csg.GenerateCronSlotString(tt.cronStr, tt.duration)
 			if result!=tt.expected {
 				fmt.Println(result, tt.expected)
 				t.Fail()

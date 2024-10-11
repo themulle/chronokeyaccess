@@ -9,7 +9,7 @@ import (
 )
 
 // ReverseCronSlot takes a cron expression and reverses it to generate the original input string
-func GenerateCronSlotString(cronStr string, duration time.Duration) (string, error) {
+func (csg* CronSlotGenerator) GenerateCronSlotString(cronStr string, duration time.Duration) (string, error) {
 	// Validate cron expression
 	_, err := cronexpr.Parse(cronStr)
 	if err != nil {
@@ -23,8 +23,8 @@ func GenerateCronSlotString(cronStr string, duration time.Duration) (string, err
 
 	minutes := parts[1]
 	hours := parts[2]
-	months := reverseExtractMonths(parts[4])
-	weekdays := reverseExtractDays(parts[5])
+	months := csg.reverseExtractMonths(parts[4])
+	weekdays := csg.reverseExtractDays(parts[5])
 	years := parts[6]
 
 	// Construct time range from hours and minutes
@@ -65,15 +65,15 @@ func calculateEnd(startTime string, duration time.Duration) string {
 	return end.Format("15:04")
 }
 
-func reverseExtractDays(input string) string {
-	for dayNumber, dayName := range reverseMap(weekdayMapDE) {
+func (csg* CronSlotGenerator) reverseExtractDays(input string) string {
+	for dayNumber, dayName := range reverseMap(csg.LocaleWeekDayMap) {
 		input = strings.ReplaceAll(input, dayNumber, dayName)
 	}
 	return input
 }
 
-func reverseExtractMonths(input string) string {
-	for monthNumber, monthName := range reverseMap(monthMapDE) {
+func  (csg* CronSlotGenerator) reverseExtractMonths(input string) string {
+	for monthNumber, monthName := range reverseMap(csg.LocaleMonthNameMap) {
 		input = strings.ReplaceAll(input, monthNumber, monthName)
 	}
 	return input
