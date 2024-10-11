@@ -74,13 +74,23 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
-  - format: tar.gz
+  - id: web_archive
+    builds: [web]
+    name_template: "chronokeyaccess_web_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - id: cli_archive
+    builds: [cli]
+    name_template: "chronokeyaccess_cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - id: wgreader_archive
+    builds: [wgreader]
+    name_template: "chronokeyaccess_wgreader_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - id: dooropener_archive
+    builds: [dooropener]
+    name_template: "chronokeyaccess_dooropener_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 nfpms:
   - id: web_pkg
     package_name: chronokeyaccess_web
-    builds:
-      - web
+    builds: [web]
     vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>
@@ -88,13 +98,17 @@ nfpms:
     license: Apache 2.0
     formats:
       - deb
-    provides:
-      - chronokeyaccess_web
-    bindir: /usr/bin
+    contents:
+      - src: ./scripts/web.service
+        dst: /etc/systemd/system/chronokeyaccess_web.service
+        type: file
+    scripts:
+      preinstall: ./scripts/web_preinstall.sh
+      postinstall: ./scripts/web_postinstall.sh
+      postremove: ./scripts/web_postuninstall.sh
   - id: cli_pkg
     package_name: chronokeyaccess_cli
-    builds:
-      - cli
+    builds: [cli]
     vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>
@@ -107,8 +121,7 @@ nfpms:
     bindir: /usr/bin
   - id: wgreader_pkg
     package_name: chronokeyaccess_wgreader
-    builds:
-      - wgreader
+    builds: [wgreader]
     vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>
@@ -121,8 +134,7 @@ nfpms:
     bindir: /usr/bin
   - id: dooropener_pkg
     package_name: chronokeyaccess_dooropener
-    builds:
-      - dooropener
+    builds: [dooropener]
     vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>

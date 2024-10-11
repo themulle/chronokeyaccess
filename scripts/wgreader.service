@@ -1,0 +1,13 @@
+[Unit]
+Description=ChronoKeyAccess Wiegand Reader
+After=network.target
+
+[Service]
+User=chronokeyaccess
+Group=chronokeyaccess
+WorkingDirectory=/etc/chronokeyaccess
+ExecStart=/usr/bin/chronokeyaccess_wgreader
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
