@@ -1,0 +1,4 @@
+dist/
+cmd/*/*.csv
+cmd/*/*.json
+*.exe
