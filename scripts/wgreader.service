@@ -6,7 +6,7 @@ After=network.target
 User=chronokeyaccess
 Group=chronokeyaccess
 WorkingDirectory=/etc/chronokeyaccess
-ExecStart=/usr/bin/chronokeyaccess_wgreader
+ExecStart=/usr/bin/chronokeyaccess_wgreader -exec /etc/chronokeyaccess/checkandopen.sh
 Restart=on-failure
 
 [Install]

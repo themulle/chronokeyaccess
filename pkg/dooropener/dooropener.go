@@ -7,54 +7,30 @@ import (
 )
 
 type DoorOpener struct {
-	RelayPin    int
-	Chip        string
-	ClosedState int
-	OpenState   int
-	Runtime     time.Duration
+	GpioOut
 }
 
-// NewWiegandReader erstellt einen neuen WiegandReader
-func NewDoorOpener(relayPin int, closedState bool) *DoorOpener {
-	opener := &DoorOpener{
-		RelayPin: relayPin,
-		Chip:     "gpiochip0",
-		Runtime:  time.Second * 3,
-	}
-	if closedState {
-		opener.ClosedState = 1
-		opener.OpenState = 0
-	} else {
-		opener.ClosedState = 0
-		opener.OpenState = 1
-	}
-
-	return opener
+func NewDoorOpener(relayPin int, offState bool) *DoorOpener {
+	retval := &DoorOpener{}
+	retval.GpioOut=*NewGpioOut(relayPin,offState)
+	return retval
 }
 
-func (d *DoorOpener) InitAsOutput() error {
-	line, err := gpiocdev.RequestLine(d.Chip, d.RelayPin, gpiocdev.AsOutput(d.ClosedState))
-	if err != nil {
-		return err
-	}
-	return line.Close()
-}
-
-func (d *DoorOpener) OpenDoor() error {
-	line, err := gpiocdev.RequestLine(d.Chip, d.RelayPin, gpiocdev.AsOutput(d.ClosedState))
+func (g *DoorOpener) ActivateFor(runtime time.Duration)  error {
+	line, err := gpiocdev.RequestLine(g.Chip, g.Pin, gpiocdev.AsOutput(g.OffState))
 	if err != nil {
 		return err
 	}
 	defer line.Close()
-	defer line.SetValue(d.ClosedState)
+	defer line.SetValue(g.OffState)
 
 	start := time.Now()
-	for time.Since(start) < d.Runtime {
-		if err = line.SetValue(d.OpenState); err != nil {
+	for time.Since(start) < runtime {
+		if err = line.SetValue(g.OnState); err != nil {
 			return err
 		}
 		time.Sleep(time.Millisecond * 400)
-		if err = line.SetValue(d.ClosedState); err != nil {
+		if err = line.SetValue(g.OffState); err != nil {
 			return err
 		}
 		time.Sleep(time.Millisecond * 100)

@@ -1,46 +1,40 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
 	"github.com/themulle/chronokeyaccess/pkg/dooropener"
 )
 
 func main() {
-	relayPin := flag.Int("relaypin", 18, "relay pin number")
+	ledPin := flag.Int("ledPin", 22, "led pin number")
+	relayPin := flag.Int("relaypin", 23, "relay pin number")
+	buzzerPin := flag.Int("buzzerpin", 24, "buzzer pin number")
 	closedState := flag.Bool("closedstate", true, "default closed state")
 	logLevelFlag := flag.String("loglevel", "info", "Log level (debug, info, error)")
 	open := flag.Bool("open", true, "initialize opener to default state")
-	// Parse command-line flags
 	flag.Parse()
 
 	setupLogger(*logLevelFlag)
 
 	slog.Info("starting door opener")
-	opener := dooropener.NewDoorOpener(*relayPin, *closedState)
-	opener.InitAsOutput()
+	relay := dooropener.NewDoorOpener(*relayPin, *closedState)
+	led := dooropener.NewGpioOut(*ledPin,*closedState)
+	buzzer := dooropener.NewGpioOut(*buzzerPin, *closedState)
+	relay.InitAsOutput()
+	led.InitAsOutput()
+	buzzer.InitAsOutput()
 	if *open {
-		opener.OpenDoor()
+		go buzzer.ActivateFor(time.Millisecond*500)
+		go led.ActivateFor(time.Second*2)
+		relay.ActivateFor(time.Second*3)	
 	}
 
 	slog.Info("done")
-}
-
-func startShutdownListener(cancel context.CancelFunc) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		<-c
-		log.Println("shutdown")
-		cancel()
-	}()
 }
 
 func setupLogger(logLevelFlag string) error {

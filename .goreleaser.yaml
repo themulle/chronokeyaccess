@@ -132,19 +132,26 @@ nfpms:
     provides:
       - chronokeyaccess_wgreader
     bindir: /usr/bin
+    contents:
+      - src: ./scripts/checkandopen.sh
+        dst: /etc/chronokeyaccess/checkandopen.sh
+        type: file
+        file_info:
+          mode: 0700
   - id: dooropener_pkg
     package_name: chronokeyaccess_dooropener
     builds: [dooropener]
     vendor: TheMulle
     homepage: https://github.com/themulle
     maintainer: Manuel Müller <themulle@gmail.com>
-    description: ChronoKeyAccess Wiegand Reader App
+    description: ChronoKeyAccess Door Opener App
     license: Apache 2.0
     formats:
       - deb
     provides:
       - chronokeyaccess_dooropener
     bindir: /usr/bin
+    
 
 changelog:
   sort: asc
