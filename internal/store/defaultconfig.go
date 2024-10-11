@@ -75,26 +75,11 @@ func GetDefualtConfig() codemanager.CodeManagerStore {
 		},
 	}...)
 
-	store.Slots = append(store.Slots, codemanager.CronCodeSlots{
-		{
-			Name:       "default",
-			CronString: "0 0 7 * * * *",
-			Duration:   17*time.Hour - time.Nanosecond,
-			Type:       codemanager.PersonalPin,
-		},
-		{
-			Name:       "always",
-			CronString: "0 0 0 * * * *",
-			Duration:   24*time.Hour - time.Nanosecond,
-			Type:       codemanager.PersonalPin,
-		},
-	}...)
-
 	{
-
 		store.PersonalCodes = codemanager.PersonalCodes{
-			{Name: "DefaultUser", PinCode: GeneratePinCode(12345, 5), SlotName: "default"},
-			{Name: "AdminUser", PinCode: GeneratePinCode(56789, 5), SlotName: "always"},
+			{Name: "DefaultUser", PinCode: GeneratePinCode(12345, 6), CronString: "08:00-22:00"},
+			{Name: "AdminUser", PinCode: GeneratePinCode(56789, 6), CronString: "*"},
+			{Name: "SampleUser", PinCode: GeneratePinCode(56789, 6), CronString: "16:00-22:00 Mo,Mi,Fr Okt-Mar 2020-2030"},
 		}
 	}
 

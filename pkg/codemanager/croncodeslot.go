@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gorhill/cronexpr"
+	"github.com/themulle/cronexpr"
 )
 
 type CronCodeSlot struct {
@@ -14,12 +14,14 @@ type CronCodeSlot struct {
 	Duration       time.Duration
 	Type           CronCodeSlotType
 	PinCode        uint
+	ValidTo			time.Time
 	cronExpression *cronexpr.Expression
 }
 
 func (c CronCodeSlot) GetName() string {
 	return c.Name
 }
+
 
 func (c CronCodeSlot) GetDescription() string {
 	return c.CronString

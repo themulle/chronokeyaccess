@@ -10,7 +10,6 @@ import (
 	"github.com/themulle/chronokeyaccess/pkg/dateparser"
 )
 
-// Parse liest die CSV-Datei und gibt eine Liste von codemanager.PersonalCodes zurück
 func LoadAccessLogCSV(filePath string) (accesslog.AccessLogs, error) {
 	file, err := os.Open(filePath)
 	if err != nil {

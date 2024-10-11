@@ -26,10 +26,38 @@ function showPinCodes(paramDaytime) {
     });
 }
 
+async function copyText() {
+  var contentToCopy = "";
+  $(".copyContent").each(function() {
+      contentToCopy += $(this).val() + "\n";
+  });
+ 
+  contentToCopy = $("#WhatsappPrefix").val()
+    + "\n\n"
+    + contentToCopy
+    + "\n"
+    + $("#WhatsappPostfix").val()
+  
+    try {
+      await navigator.clipboard.writeText(contentToCopy);
+      alert(contentToCopy);
+  } catch (err) {
+      console.error("Failed to copy: ", err);
+      alert("Failed to copy content to clipboard.");
+  }
+}
+
+
 $(document).ready(function () {
   datetime.addEventListener('ionChange', function () {
     console.log('ionChange', this.value, timerange);
     showPinCodes(this.value);
+  });
+
+  $(".quick-hour").on('click', function () {
+    var hour = $(this).data('hour');
+    $('#hourSelect').val(hour);
+    $('#hourSelect').get(0).dispatchEvent(new Event('ionChange'));
   });
 
   {

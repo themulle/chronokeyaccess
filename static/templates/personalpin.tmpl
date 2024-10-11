@@ -1,0 +1,121 @@
+{{ template "header.tmpl" . }}
+<ion-grid>
+   <ion-row>
+      <ion-col size-md="6" offset-md="3" class="card-center">
+         <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+            <ion-card class="card-center">
+               <ion-card-content class="card-center">
+                  <ion-datetime id="dateSelector" first-day-of-week="1" presentation="date" multiple="true" showClearButton="true" min="{{.min}}" max="{{.max}}"></ion-datetime>
+               </ion-card-content>
+            </ion-card>
+         </div>
+      </ion-col>
+   </ion-row>
+   <ion-row >
+      <ion-col size-md="6" offset-md="3" id="codelist">
+      </ion-col>
+   </ion-row>
+</ion-grid>
+<ion-grid>
+   <ion-row >
+      <ion-col size-md="6" offset-md="3">
+         <ion-item>
+            <ion-select id="hourSelect">
+               <ion-select-option value="00">00:00</ion-select-option>
+               <ion-select-option value="01">01:00</ion-select-option>
+               <ion-select-option value="02">02:00</ion-select-option>
+               <ion-select-option value="03">03:00</ion-select-option>
+               <ion-select-option value="04">04:00</ion-select-option>
+               <ion-select-option value="05">05:00</ion-select-option>
+               <ion-select-option value="06">06:00</ion-select-option>
+               <ion-select-option value="07">07:00</ion-select-option>
+               <ion-select-option value="08">08:00</ion-select-option>
+               <ion-select-option value="09">09:00</ion-select-option>
+               <ion-select-option value="10">10:00</ion-select-option>
+               <ion-select-option value="11">11:00</ion-select-option>
+               <ion-select-option value="12">12:00</ion-select-option>
+               <ion-select-option value="13">13:00</ion-select-option>
+               <ion-select-option value="14">14:00</ion-select-option>
+               <ion-select-option value="15">15:00</ion-select-option>
+               <ion-select-option value="16" selected>16:00</ion-select-option>
+               <ion-select-option value="17">17:00</ion-select-option>
+               <ion-select-option value="18">18:00</ion-select-option>
+               <ion-select-option value="19">19:00</ion-select-option>
+               <ion-select-option value="20">20:00</ion-select-option>
+               <ion-select-option value="21">21:00</ion-select-option>
+               <ion-select-option value="22">22:00</ion-select-option>
+               <ion-select-option value="23">23:00</ion-select-option>
+            </ion-select>
+            <ion-button size="small" class="quick-hour" data-hour="16">16:00</ion-button>
+            <ion-button size="small" class="quick-hour" data-hour="17">17:00</ion-button>
+            <ion-button size="small" class="quick-hour" data-hour="18">18:00</ion-button>
+            <ion-button size="small" class="quick-hour" data-hour="19">19:00</ion-button>
+            <ion-button size="small" class="quick-hour" data-hour="20">20:00</ion-button>
+            <ion-button size="small" class="quick-hour" data-hour="21">21:00</ion-button>
+         </ion-item>
+      </ion-col>
+   </ion-row >
+   <ion-row>
+      <ion-col offset-md="3" size-md="6">
+         <ion-checkbox class="weekday-checkbox" value="Monday"></ion-checkbox>
+         <ion-label>Montag</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Tuesday"></ion-checkbox>
+         <ion-label>Dienstag</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Wednesday"></ion-checkbox>
+         <ion-label>Mittwoch</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Thursday"></ion-checkbox>
+         <ion-label>Donnerstag</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Friday"></ion-checkbox>
+         <ion-label>Freitag</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Saturday"></ion-checkbox>
+         <ion-label>Samstag</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="Sunday"></ion-checkbox>
+         <ion-label>Sonntag</ion-label>
+      </ion-col>
+   </ion-row>
+   <!-- Monat und Jahr wählen -->
+   <ion-row>
+      <ion-col size-md="6" offset-md="3">
+         <ion-checkbox class="weekday-checkbox" value="1"></ion-checkbox>
+         <ion-label>Januar</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="2"></ion-checkbox>
+         <ion-label>Februar</ion-label>
+
+         <ion-checkbox class="weekday-checkbox" value="3"></ion-checkbox>
+         <ion-label>März</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="4"></ion-checkbox>
+         <ion-label>April</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="5"></ion-checkbox>
+         <ion-label>Mai</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="6"></ion-checkbox>
+         <ion-label>Juni</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="7"></ion-checkbox>
+         <ion-label>Juli</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="8"></ion-checkbox>
+         <ion-label>August</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="9"></ion-checkbox>
+         <ion-label>September</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="10"></ion-checkbox>
+         <ion-label>Oktober</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="11"></ion-checkbox>
+         <ion-label>November</ion-label>
+         <ion-checkbox class="weekday-checkbox" value="12"></ion-checkbox>
+         <ion-label>Dezember</ion-label>
+         
+      </ion-col>
+   </ion-row>
+   <ion-row >
+      <ion-col size-md="6" offset-md="3">
+         <ion-item>
+            <ion-label>Jahr wählen</ion-label>
+            <ion-select id="yearSelect">
+               <ion-select-option value="2024">2024</ion-select-option>
+               <ion-select-option value="2025">2022</ion-select-option>
+               <ion-select-option value="2023">2023</ion-select-option>
+            </ion-select>
+         </ion-item>
+      </ion-col>
+   </ion-row>
+</ion-grid>
+{{$selectedTab:="PersonalPin"}}
+{{ template "footer.tmpl" $selectedTab }}

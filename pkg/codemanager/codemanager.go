@@ -3,6 +3,7 @@ package codemanager
 import (
 	"crypto/sha256"
 	"encoding/binary"
+	"math"
 	"time"
 )
 
@@ -20,6 +21,7 @@ type EntranceSlot interface {
 
 type codeManagerBase struct {
 	Password string
+	PinLength uint
 }
 
 func (codeManagerBase) truncateToDay(t time.Time) time.Time {
@@ -28,6 +30,6 @@ func (codeManagerBase) truncateToDay(t time.Time) time.Time {
 
 func (ecm *codeManagerBase) CalculatePinCode(timeString string) uint {
 	hash := sha256.Sum256(append([]byte(ecm.Password), []byte(timeString)...))
-	pinCode := binary.BigEndian.Uint64(hash[:8]) % 10000
+	pinCode := binary.BigEndian.Uint64(hash[:8]) % uint64(math.Pow10(int(ecm.PinLength)))
 	return uint(pinCode)
 }

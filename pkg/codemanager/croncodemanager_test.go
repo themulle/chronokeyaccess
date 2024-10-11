@@ -7,6 +7,7 @@ import (
 
 	"github.com/goodsign/monday"
 	"github.com/themulle/chronokeyaccess/pkg/codemanager"
+	"github.com/themulle/cronexpr"
 )
 
 func TestCalculateCronPinCode_Static(t *testing.T) {
@@ -125,6 +126,11 @@ func TestCalculateDynamicCronPinCode_Dynamic(t *testing.T) {
 }
 
 func TestCalculateDynamicCronPinCode_Overflow(t *testing.T) {
+	exp, err:=cronexpr.Parse("0 0 22 1 2 FRI-MON,MON 2023")
+	fmt.Println(err)
+	fmt.Println(exp.Next(time.Now()))
+
+
 	ecm := codemanager.NewCronCodeManager("1234", codemanager.CronCodeSlots{
 		{
 			CronString: "0 0 22 1 2 * 2023",

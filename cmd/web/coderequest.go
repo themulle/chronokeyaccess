@@ -16,19 +16,14 @@ type CodeRequest struct {
 	ExactMatch bool     `form:"exactmatch"`
 }
 
-func getCodes(cr CodeRequest) (codemanager.EntranceCodes, error) {
+func getCodes(cr CodeRequest, cm codemanager.CodeManager ) (codemanager.EntranceCodes, error) {
 	retval := codemanager.EntranceCodes{}
-	var cm codemanager.CodeManager
 	if len(cr.DayTime) == 0 {
 		return retval, fmt.Errorf("no daytime in request")
 	}
 	cr.CodeType = strings.TrimSpace(strings.ToLower(cr.CodeType))
 
-	if codeManagerStore, err := store.LoadConfiguration("config.json", "personalcodes.csv", true); err != nil {
-		return retval, err
-	} else if cm, err = codemanager.InitFromStore(codeManagerStore); err != nil {
-		return retval, err
-	}
+	
 	for _, dayTimeString := range cr.DayTime {
 		dayTime, err := dateparser.Parse(dayTimeString)
 		if err != nil {
