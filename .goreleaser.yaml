@@ -138,7 +138,6 @@ nfpms:
         type: file
         file_info:
           mode: 0755
-    contents:
       - src: ./scripts/wgreader_rtc_install.sh
         dst: /etc/chronokeyaccess/wgreader_rtc_install.sh
         type: file
