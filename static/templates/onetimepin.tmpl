@@ -1,5 +1,7 @@
 
 {{ template "header.tmpl" . }}
+{{$copyEnabled:=true}}
+{{$selectedTab:="OneTimePin"}}
         <ion-grid>
             <ion-row>
                 <ion-col size-md="6" offset-md="3" class="card-center">
@@ -12,10 +14,15 @@
                 </div>
                 </ion-col>
             </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <ion-col size-md="6" offset-md="3">
+                <ion-button size="small" id="copyButton" color="success" onclick="copyText('.copyContentWhatsapp')" backgroun>Copy to Whatsapp</ion-button>
+                <ion-button size="small" id="copyButton" color="medium" onclick="copyText('.copyContentEmail')" backgroun>Copy to E-Mail</ion-button>
+              </ion-col>
+            </ion-row>
             <ion-row >
               <ion-col size-md="6" offset-md="3" id="codelist">
               </ion-col>
             </ion-row>
         </ion-grid>
-{{$selectedTab:="OneTimePin"}}
 {{ template "footer.tmpl" $selectedTab }}

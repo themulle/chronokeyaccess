@@ -40,7 +40,6 @@ async function copyText(ccClassName) {
   
     try {
       await navigator.clipboard.writeText(contentToCopy);
-      alert(contentToCopy);
   } catch (err) {
       console.error("Failed to copy: ", err);
       alert("Failed to copy content to clipboard.");

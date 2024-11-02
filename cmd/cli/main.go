@@ -20,7 +20,7 @@ var (
 
 func init() {
 	flag.StringVar(&configFileName, "c", "config.json", "config file name")
-	flag.StringVar(&personalPinFileName, "p", "personalcodes.csv", "personal pin csv file name")
+	flag.StringVar(&personalPinFileName, "p", "pins.csv", "personal pin csv file name")
 	flag.StringVar(&accessLogFile, "accesslog", "accesslog.csv", "accesslog file")
 	flag.UintVar(&pinCode, "t", 0, "test pin code")
 	flag.UintVar(&showCurrentCodes, "s", 0, "show codes for the next n days")

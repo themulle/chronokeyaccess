@@ -7,6 +7,9 @@ User=chronokeyaccess
 Group=chronokeyaccess
 WorkingDirectory=/etc/chronokeyaccess
 ExecStart=/usr/bin/chronokeyaccess_web
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=chronokeyaccess_web
 Restart=on-failure
 
 [Install]

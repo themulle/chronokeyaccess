@@ -3,10 +3,6 @@
 <input type="hidden" id="WhatsappPrefix" value="*Zugangscodes Kalthalle Ringingen*">
 <input type="hidden" id="WhatsappPostfix" value="⚽ Viel Spaß wünscht der SV Ringingen ⚽">
 
-<ion-row class="ion-justify-content-center">
-    <ion-button size="small" id="copyButton" color="success" onclick="copyText('.copyContentWhatsapp')" backgroun>Copy to Whatsapp</ion-button>
-    <ion-button size="small" id="copyButton" color="medium" onclick="copyText('.copyContentEmail')" backgroun>Copy to E-Mail</ion-button>
-</ion-row>
 <ion-row>
     <ion-button size="small" onclick="setTimeRange('');">alle</ion-button>
 {{range $key, $val := .entranceTimes}}    

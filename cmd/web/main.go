@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
+	"log/slog"
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 	"time"
@@ -16,26 +18,32 @@ import (
 	"github.com/themulle/chronokeyaccess/static"
 )
 
+const (
+	defaultConfigFile    = "config.json"
+	defaultPinFile      = "personalcodes.csv"
+	defaultAccessLogFile = "accesslog.csv"
+	defaultWebConfig = 	"webconfig.json"
+	defaultListenPort   = "0.0.0.0:8080"
+	defaultLogLevel     = "info"
+)
+
 var (
-	configFileName string
+	configFileName      string
+	webConfigFileName string
 	config webconfig
-
-	
 	showHelp bool
-
-	
+	accessLogFile      string
+	logLevelFlag       string
+	personalPinFileName string
 )
 
 func init() {
-	config.ConfigFileName="config.json"
-	config.PersonalPinFileName="personalcodes.csv"
-	config.AccessLogFileName="accesslog.csv"
-	config.ListenPort="0.0.0.0:8080"
+	flag.StringVar(&configFileName, "c", defaultConfigFile, "config file name")
+    flag.StringVar(&personalPinFileName, "p", defaultPinFile, "personal pin csv file name")
+    flag.StringVar(&accessLogFile, "accesslog", defaultAccessLogFile, "accesslog file")
+    flag.StringVar(&logLevelFlag, "loglevel", defaultLogLevel, "log level (debug, info, warn, error)")
+	flag.StringVar(&webConfigFileName, "webconfig", defaultWebConfig, "webconfig json")
 
-	config.WebUsers=map[string]string{"webuser":"password"}
-	config.ApiUsers=map[string]string{"apiuser":"password"}
-
-	flag.StringVar(&configFileName, "config", "webconfig.json", "webconfig json")
 	flag.BoolVar(&showHelp, "help", false, "show help")
 	flag.Parse()
 }
@@ -162,13 +170,45 @@ func loadCodeManager() (codemanager.CodeManager, error) {
 	return codemanager.InitFromStore(codeManagerStore)
 }
 
+func setupLogger(logLevelFlag string) error {
+    logLevels := map[string]slog.Level{
+        "debug": slog.LevelDebug,
+        "info":  slog.LevelInfo,
+        "warn":  slog.LevelWarn,
+        "error": slog.LevelError,
+    }
+
+    logLevel, ok := logLevels[logLevelFlag]
+    if !ok {
+        return fmt.Errorf("ungültiges Log-Level: %s. Verwenden Sie 'debug', 'info', 'warn' oder 'error'", logLevelFlag)
+    }
+
+    handler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+        Level: logLevel,
+    })
+    logger := slog.New(handler)
+    slog.SetDefault(logger)
+
+    slog.Info("Logger erfolgreich konfiguriert", 
+        "level", logLevelFlag,
+        "handler", "JSONHandler")
+
+    return nil
+}
+
 
 
 func main() {
+	flag.Parse()
 	if showHelp {
 		flag.PrintDefaults()
 		return
 	}
+
+	if err := setupLogger(logLevelFlag); err != nil {
+        slog.Error("Fehler beim Einrichten des Loggers", "error", err)
+        os.Exit(1)
+    }
 
 	var err error
 	if config, err = store.LoadOrInitJsonConfiguration(configFileName,config); err!=nil {
@@ -176,13 +216,15 @@ func main() {
 		return
 	}
 
-	cm, err:= loadCodeManager()
-	if err!=nil {
-		fmt.Println(err)
-		return
-	}
+	cm, err := loadCodeManager()
+    if err != nil {
+        slog.Error("Fehler beim Laden des CodeManagers", "error", err)
+        os.Exit(1)
+    }
+
 
 	r := setupRouter(cm)
-	r.Run(config.ListenPort)
+    slog.Info("Webserver wird gestartet", "port", defaultListenPort)
+    r.Run(defaultListenPort)
 }
 

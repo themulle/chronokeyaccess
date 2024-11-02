@@ -16,7 +16,10 @@ RESULT=$(chronokeyaccess_cli -t "$CODE")
 if [ "$RESULT" == "ok" ]; then
   echo "Code verified, opening door..."
   # Run the dooropener_rpi command
-  chronokeyaccess_dooropener
+  chronokeyaccess_dooropener -pin 22 -state 1 -duration 1 & //buzzer - gelb
+  chronokeyaccess_dooropener -pin 24 -state 1 -duration 1 & //led - braun
+  chronokeyaccess_dooropener -pin 23 -state 1 -duration 5 //relais - grau
 else
+  chronokeyaccess_dooropener -pin 22 -state 1 -duration 1 //buzzer - gelb 
   echo "Code verification failed: $RESULT"
 fi

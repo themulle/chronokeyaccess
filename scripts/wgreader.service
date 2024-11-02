@@ -7,6 +7,9 @@ User=chronokeyaccess
 Group=chronokeyaccess
 WorkingDirectory=/etc/chronokeyaccess
 ExecStart=/usr/bin/chronokeyaccess_wgreader -exec /etc/chronokeyaccess/checkandopen.sh
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=wgreader
 Restart=on-failure
 
 [Install]
